@@ -29,6 +29,18 @@ const requireLogin = (req, res, next) => {
   }
 };
 
+// const refreshToken = (req, res, next) => {
+//   const userId = user._id.toString();
+//     const token = jwt.sign(
+//       { userId, email: user.email },
+//       process.env.JWT_SECRET,
+//       {
+//         expiresIn: "60h",
+//         subject: userId,
+//       }
+//     );
+// }
+
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
@@ -36,7 +48,6 @@ app.get("/", (_req, res) => {
 app.post("/users", async (req, res) => {
   console.log(req.body);
   const { username, email, password } = req.body.user;
-  console.log("username", username);
   try {
     const user = await User.create({
       username: username,
@@ -81,9 +92,10 @@ app.get("/user", requireLogin, async (req, res) => {
 app.put("/user", requireLogin, async (req, res) => {
     console.log(req.body.user)
     console.log(req.user.userId)
-    const {email, username, bio} = req.body.user
+    const {email, username, bio, password} = req.body.user
     try{
-      await User.updateOne({_id: req.user.userId}, {$set: {username: username, bio: bio, email: email, profilePicture: profilePicture}})
+      await User.updateOne({_id: req.user.userId},
+         {$set: {username: username, bio: bio, email: email, password: password}})
       res.status(201).json({username, email})
     }
     catch(err){
