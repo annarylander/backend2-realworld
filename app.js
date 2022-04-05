@@ -29,17 +29,17 @@ const requireLogin = (req, res, next) => {
   }
 };
 
-// const refreshToken = (req, res, next) => {
-//   const userId = user._id.toString();
-//     const token = jwt.sign(
-//       { userId, email: user.email },
-//       process.env.JWT_SECRET,
-//       {
-//         expiresIn: "60h",
-//         subject: userId,
-//       }
-//     );
-// }
+const createToken = (user) => {
+  const userId = user._id.toString();
+    const token = jwt.sign(
+      { userId, email: user.email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "60h",
+        subject: userId,
+      }
+    );
+}
 
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
@@ -47,18 +47,37 @@ app.get("/", (_req, res) => {
 
 app.post("/users", async (req, res) => {
   console.log(req.body);
+  
+
   const { username, email, password } = req.body.user;
-  try {
+  
     const user = await User.create({
       username: username,
       email: email,
       password: password,
+
+      
     });
-    res.status(201).json({ user });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ message: "Problem to register" });
-  }
+
+    // const token = createToken(user)
+    // console.log(token)
+
+    const userId = user._id.toString()
+    const token = jwt.sign({
+      userId, email: user.email},
+      process.env.JWT_SECRET,
+      {expiresIn: "2 h", subject: userId}
+    )
+    
+    res.json({ user: {
+    email: email,
+    username: username,
+    bio: user.bio,
+    image: user.image,
+    token: token
+    } 
+    });
+  
 });
 
 

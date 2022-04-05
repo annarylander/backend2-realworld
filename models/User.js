@@ -22,9 +22,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  token: {
-    type: String,
-  },
   image: {
     type: String, default: "https://upload.wikimedia.org/wikipedia/commons/7/72/Default-welcomer.png" 
   }
