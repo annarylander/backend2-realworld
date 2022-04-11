@@ -9,4 +9,11 @@ const articleSchema = new mongoose.Schema({
 
 const Article = mongoose.model("Article", articleSchema);
 
+const getAllArticle = async () => {
+  const articles = await Article.find().exec();
+  return articles;
+};
+
+module.exports = { getAllArticle }
+
 exports.Article = Article;
