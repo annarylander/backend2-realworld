@@ -17,20 +17,35 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
   bio: {
     type: String,
-    default: ""
+    default: "",
   },
-  profilePicture: {
-    type: String, default: "https://upload.wikimedia.org/wikipedia/commons/7/72/Default-welcomer.png" 
-  }
+  image: {
+    type: String,
+    default:
+      "https://upload.wikimedia.org/wikipedia/commons/7/72/Default-welcomer.png",
+  },
 });
 
 userSchema.pre("save", async function (next) {
+  console.log(this);
   if (this.modifiedPaths().includes("password")) {
     const hash = await bcrypt.hash(this.password, 10);
     this.password = hash;
   }
+  next();
+});
+
+userSchema.pre("findOneAndUpdate", async function (next) {
+  const valuesToUpdate = this.getUpdate();
+  console.log("test i modellen");
+  console.log(`values att updatera: ${valuesToUpdate}`);
+  console.log(this._update.password);
+  const hash = await bcrypt.hash(this._update.password, 10);
+  this._update.password = hash;
+  console.log(hash);
   next();
 });
 
