@@ -156,7 +156,7 @@ app.put("/api/user", requireLogin, async (req, res) => {
   }
 });
 
-app.post("/api/articles", async (req, res) => {
+app.post("/api/articles", requireLogin, async (req, res) => {
   const { title, description, body, tagList } = req.body.article;
   try {
     const article = await Article.create({
@@ -171,6 +171,13 @@ app.post("/api/articles", async (req, res) => {
     res.status(400);
   }
 });
+
+app.get("/api/articles", async (req, res) => {
+    const articles = await Article.find({})
+    const articlesCount = 
+    console.log(articles)
+    res.json({ articles })
+})
 
 mongoose.connect("mongodb://localhost/realworld");
 app.listen(PORT, () => {
