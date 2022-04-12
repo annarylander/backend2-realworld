@@ -37,7 +37,7 @@ const createToken = (user) => {
   return (token = jwt.sign(
     { userId, email: user.email },
     process.env.JWT_SECRET,
-    { expiresIn: "24 h", subject: userId }
+    { expiresIn: "54 h", subject: userId }
   ));
 };
 
@@ -98,36 +98,6 @@ app.get("/user", requireLogin, async (req, res) => {
   res.json(user);
 });
 
-// app.put("/api/user", async (req, res) => {
-//   console.log(req.body.user);
-//   console.log(req.user.userId);
-//   const { email, username, bio, password, image } = req.body.user;
-//   try {
-//     await User.findOneAndUpdate(
-//       { _id: req.user.userId },
-//       {
-//         $set: {
-//           username: username,
-//           bio: bio,
-//           email: email,
-//           image: image,
-//           password: password,
-//         },
-//       }
-//     );
-//     res.status(201).json({
-//       user: {
-//         email: email,
-//         username: username,
-//         bio: bio,
-//         image: image,
-//       },
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
-
 app.put("/api/user", requireLogin, async (req, res) => {
   console.log(`user: ${req.body.user}`);
   console.log(`userid: ${req.user.userId}`);
@@ -140,8 +110,7 @@ app.put("/api/user", requireLogin, async (req, res) => {
         bio: bio,
         email: email,
         password: password,
-      },
-      { returnDocument: "after" }
+      }
     );
     res.status(201).json({
       user: {
@@ -158,12 +127,14 @@ app.put("/api/user", requireLogin, async (req, res) => {
 
 app.post("/api/articles", requireLogin, async (req, res) => {
   const { title, description, body, tagList } = req.body.article;
+  const user = req.user;
   try {
     const article = await Article.create({
       title: title,
       description: description,
       body: body,
       tagList: tagList,
+      author: user.userId,
     });
     res.status(201).json({ article });
   } catch (err) {
