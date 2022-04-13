@@ -149,7 +149,11 @@ app.post("/api/articles", requireLogin, async (req, res) => {
   }
 });
 
-app.get("/api/articles", getArticleList)
+app.get("/api/articles", async (req, res) => {
+  const articles = await Article.find();
+  const articlesCount = articles.length
+  res.json({ articles, articlesCount})
+})
 
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {

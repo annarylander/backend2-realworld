@@ -18,11 +18,11 @@ const articleSchema = new mongoose.Schema(
 
 const Article = mongoose.model("Article", articleSchema);
 
-const getAllArticle = async () => {
-  const articles = await Article.find();
-  return articles;
-};
+// const getAllArticle = async () => {
+//   const articles = await Article.find();
+//   return articles;
+// };
 
-module.exports = { getAllArticle }
+// module.exports = { getAllArticle }
 
 exports.Article = Article;
