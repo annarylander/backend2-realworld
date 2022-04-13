@@ -41,11 +41,13 @@ userSchema.pre("save", async function (next) {
 userSchema.pre("findOneAndUpdate", async function (next) {
   const valuesToUpdate = this.getUpdate();
   console.log("test i modellen");
-  console.log(`values att updatera: ${valuesToUpdate}`);
-  console.log(this._update.password);
-  const hash = await bcrypt.hash(this._update.password, 10);
-  this._update.password = hash;
-  console.log(hash);
+  console.log(
+    `values att updatera: ${JSON.stringify(valuesToUpdate, null, 2)}`
+  );
+
+  if (valuesToUpdate.password) {
+    valuesToUpdate.password = await bcrypt.hash(valuesToUpdate.password, 10);
+  }
   next();
 });
 

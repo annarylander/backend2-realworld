@@ -11,7 +11,9 @@ const mongoose = require("mongoose");
 const { use } = require("passport");
 
 const app = express();
-const PORT = 3000;
+
+const PORT = process.env.PORT;
+const MONGODB_URL = process.env.MONGODB_URL;
 
 app.use(express.json());
 app.use(express.static("dist"));
@@ -25,6 +27,7 @@ const requireLogin = (req, res, next) => {
     req.user = jwt.verify(token, process.env.JWT_SECRET);
     console.log("inloggad");
     console.log(token);
+    req.user.token = token;
     console.log(req.user);
     next();
   } catch (err) {
@@ -95,12 +98,14 @@ app.post("/api/users/login", async (req, res) => {
 });
 
 app.get("/user", requireLogin, async (req, res) => {
-  const user = await User.findOne({ _id: req.user.userId });
-  res.json(user);
+  let user = await User.findOne({ _id: req.user.userId });
+  user = user.toObject();
+  user.token = req.user.token;
+  res.json({ user });
 });
 
 app.put("/api/user", requireLogin, async (req, res) => {
-  console.log(`user: ${req.body.user}`);
+  console.log(req.user);
   console.log(`userid: ${req.user.userId}`);
   const { email, username, bio, password } = req.body.user;
   try {
@@ -146,7 +151,7 @@ app.post("/api/articles", requireLogin, async (req, res) => {
 
 app.get("/api/articles", getArticleList)
 
-mongoose.connect("mongodb://localhost/realworld");
+mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {
   console.log(`Started Express server on port ${PORT}`);
 });
