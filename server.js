@@ -6,12 +6,10 @@ const bcrypt = require("bcrypt");
 
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
-const { getArticleList } = require("./controllers/articles")
+const { getArticleList } = require("./controllers/articles");
 const mongoose = require("mongoose");
-const { use } = require("passport");
 
 const app = express();
-
 const PORT = process.env.PORT;
 const MONGODB_URL = process.env.MONGODB_URL;
 
@@ -19,7 +17,6 @@ app.use(express.json());
 app.use(express.static("dist"));
 
 const requireLogin = (req, res, next) => {
-  console.log("dsasdadsa");
   const authHeader = req.header("Authorization");
 
   try {
@@ -118,12 +115,14 @@ app.put("/api/user", requireLogin, async (req, res) => {
         password: password,
       }
     );
+    const token = createToken(updatedUser);
     res.status(201).json({
       user: {
         email: updatedUser.email,
         username: updatedUser.username,
         bio: updatedUser.bio,
         image: updatedUser.image,
+        token: token,
       },
     });
   } catch (err) {
@@ -151,9 +150,9 @@ app.post("/api/articles", requireLogin, async (req, res) => {
 
 app.get("/api/articles", async (req, res) => {
   const articles = await Article.find();
-  const articlesCount = articles.length
-  res.json({ articles, articlesCount})
-})
+  const articlesCount = articles.length;
+  res.json({ articles, articlesCount });
+});
 
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {
