@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
+const { getArticleList } = require("./controllers/articles")
 const mongoose = require("mongoose");
 const { use } = require("passport");
 
@@ -147,6 +148,8 @@ app.post("/api/articles", requireLogin, async (req, res) => {
     res.status(400);
   }
 });
+
+app.get("/api/articles", getArticleList)
 
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {

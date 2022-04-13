@@ -7,7 +7,7 @@ const articleSchema = new mongoose.Schema(
     description: { type: String },
     body: { type: String },
     tagList: { type: Array },
-    slug: { type: Boolean, default: true },
+    slug: { type: String , default: "", unique: true },
     favorited: { type: Boolean, default: false },
     favoritesCount: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now, required: true },
@@ -17,5 +17,12 @@ const articleSchema = new mongoose.Schema(
 );
 
 const Article = mongoose.model("Article", articleSchema);
+
+const getAllArticle = async () => {
+  const articles = await Article.find();
+  return articles;
+};
+
+module.exports = { getAllArticle }
 
 exports.Article = Article;
