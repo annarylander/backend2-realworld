@@ -6,11 +6,7 @@ const bcrypt = require("bcrypt");
 
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
-<<<<<<< HEAD
 const { getArticleList, createArticle } = require("./controllers/articles")
-=======
-const { getArticleList } = require("./controllers/articles");
->>>>>>> master
 const mongoose = require("mongoose");
 
 const app = express();
