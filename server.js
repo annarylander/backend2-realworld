@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
-const { getArticleList } = require("./controllers/articles")
+const { getArticleList, createArticle } = require("./controllers/articles")
 const mongoose = require("mongoose");
 const { use } = require("passport");
 
@@ -131,29 +131,9 @@ app.put("/api/user", requireLogin, async (req, res) => {
   }
 });
 
-app.post("/api/articles", requireLogin, async (req, res) => {
-  const { title, description, body, tagList } = req.body.article;
-  const user = req.user;
-  try {
-    const article = await Article.create({
-      title: title,
-      description: description,
-      body: body,
-      tagList: tagList,
-      author: user.userId,
-    });
-    res.status(201).json({ article });
-  } catch (err) {
-    console.log(err);
-    res.status(400);
-  }
-});
+app.post("/api/articles", requireLogin, createArticle);
 
-app.get("/api/articles", async (req, res) => {
-  const articles = await Article.find();
-  const articlesCount = articles.length
-  res.json({ articles, articlesCount})
-})
+app.get("/api/articles", getArticleList)
 
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {

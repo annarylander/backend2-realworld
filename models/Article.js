@@ -18,11 +18,22 @@ const articleSchema = new mongoose.Schema(
 
 const Article = mongoose.model("Article", articleSchema);
 
-// const getAllArticle = async () => {
-//   const articles = await Article.find();
-//   return articles;
-// };
+const getAllArticle = async () => {
+  const articles = await Article.find();
+  return articles;
+};
 
-// module.exports = { getAllArticle }
+const createArticleModel = async ({author, title, description, body, tagList})=>{
+  const article = await Article.create({
+    title: title,
+    description: description,
+    body: body,
+    tagList: tagList,
+    author: author
+  })
+  return article
+}
+
+module.exports = { getAllArticle, createArticleModel }
 
 exports.Article = Article;
