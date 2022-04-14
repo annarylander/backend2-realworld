@@ -154,6 +154,13 @@ app.get("/api/articles", async (req, res) => {
   res.json({ articles, articlesCount });
 });
 
+app.get("/api/articles/:slug", async (req, res) => {
+  const slug = req.params.slug
+  const article = await Article.findOne({slug})
+  res.json({article})
+})
+
+
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {
   console.log(`Started Express server on port ${PORT}`);
