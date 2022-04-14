@@ -7,11 +7,11 @@ const articleSchema = new mongoose.Schema(
     description: { type: String },
     body: { type: String },
     tagList: { type: Array },
-    slug: { type: String , default: "", unique: true },
+    slug: { type: String, unique: true },
     favorited: { type: Boolean, default: false },
     favoritesCount: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now, required: true },
-    updatedAt: { type: Date, default: Date.now},
+    updatedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
