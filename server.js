@@ -130,6 +130,18 @@ app.put("/api/user", requireLogin, async (req, res) => {
   }
 });
 
+app.get("/api/profiles/:username", async (req, res) => {
+  const username = req.params.username;
+  const user = await User.findOne({ username: username });
+  res.json({
+    profile: {
+      username: user.username,
+      bio: user.bio,
+      image: user.image,
+    },
+  });
+});
+
 app.post("/api/articles", requireLogin, async (req, res) => {
   const { title, description, body, tagList } = req.body.article;
   const user = req.user;
