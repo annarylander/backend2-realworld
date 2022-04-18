@@ -34,8 +34,10 @@ const getArticlesByAuthor = async (author) => {
   return articles
 }
 
-getArticlesByTag = async () => {
+getArticlesByTag = async (tag) => {
   const articles = await Article.find({ tagList: tag })
+  console.log(articles)
+  return articles
 }
 
 const createArticleModel = async ({author, title, description, body, tagList})=>{
@@ -49,6 +51,6 @@ const createArticleModel = async ({author, title, description, body, tagList})=>
   return article
 }
 
-module.exports = { getAllArticles, getArticlesByAuthor, createArticleModel }
+module.exports = { getAllArticles, getArticlesByAuthor, getArticlesByTag, createArticleModel }
 
 exports.Article = Article;

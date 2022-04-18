@@ -1,4 +1,4 @@
-const { getAllArticles, createArticleModel, getArticlesByAuthor } = require("../models/Article")
+const { getAllArticles, createArticleModel, getArticlesByAuthor, getArticlesByTag } = require("../models/Article")
 const { User } = require("../models/User")
 const { Article } = require("../models/Article")
 
@@ -22,24 +22,29 @@ const createArticle = async (req,res) => {
 
 const getArticleList = async (req, res) => {
   const author = req.query.author
+  const tag = req.query.tag
 
-  if(author){
+  if (author){
       try {
         const articles = await getArticlesByAuthor(author)
         const articlesCount = articles.length
-          res.json({articles, articlesCount})
+          res.json({ articles, articlesCount })
             } catch (err) {
               console.log(err)
-          res.json({err})
+          res.json({ err })
           }
+      } else if (tag) {
+        const articles = await getArticlesByTag(tag)
+        const articlesCount = articles.length
+        res.json({ articles, articlesCount })
       } else {
         try {
           const articles = await getAllArticles()
           const articlesCount = articles.length
-          res.json( { articles, articlesCount })
+          res.json({ articles, articlesCount })
          
       } catch (err) {
-          res.json({err})
+          res.json({ err })
       }
   }
 }
