@@ -34,7 +34,7 @@ const getArticlesByAuthor = async (author) => {
   return articles
 }
 
-getArticlesByTag = async (tag) => {
+const getArticlesByTag = async (tag) => {
   const articles = await Article.find({ tagList: tag })
   console.log(articles)
   return articles
