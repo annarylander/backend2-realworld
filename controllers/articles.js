@@ -1,10 +1,6 @@
-const { getAllArticle, createArticleModel } = require("../models/Article")
-
-const getArticleList = async (req, res) => {
-    let articles = await getAllArticle()
-    const articlesCount = articles.length
-    res.json({ articles, articlesCount })
-}
+const { getAllArticles, createArticleModel, getArticlesByAuthor } = require("../models/Article")
+const { User } = require("../models/User")
+const { Article } = require("../models/Article")
 
 const createArticle = async (req,res) => {
   const {title, description, body, tagList} = req.body.article
@@ -23,5 +19,29 @@ const createArticle = async (req,res) => {
     res.status(400);
   }
 };
+
+const getArticleList = async (req, res) => {
+  const author = req.query.author
+
+  if(author){
+      try {
+        const articles = await getArticlesByAuthor(author)
+        const articlesCount = articles.length
+          res.json({articles, articlesCount})
+            } catch (err) {
+              console.log(err)
+          res.json({err})
+          }
+      } else {
+        try {
+          const articles = await getAllArticles()
+          const articlesCount = articles.length
+          res.json( { articles, articlesCount })
+         
+      } catch (err) {
+          res.json({err})
+      }
+  }
+}
 
 module.exports = { getArticleList, createArticle }
