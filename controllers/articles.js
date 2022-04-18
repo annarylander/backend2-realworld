@@ -1,6 +1,4 @@
 const { getAllArticles, createArticleModel, getArticlesByAuthor, getArticlesByTag } = require("../models/Article")
-const { User } = require("../models/User")
-const { Article } = require("../models/Article")
 
 const createArticle = async (req,res) => {
   const {title, description, body, tagList} = req.body.article
