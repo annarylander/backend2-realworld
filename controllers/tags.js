@@ -1,12 +1,14 @@
-const { getAllArticles } = require("../models/Article")
+const { getAllArticlesModel } = require("../models/Article")
 
 const getTags = async (req, res) => {
-    const articles = await getAllArticles()
+    const articleList = await getAllArticlesModel()
     let tagList = []
 
-    for (let i = 0; i < articles.length; i++) {
-    tagList.push(articles[i].tagList[0])       
-    }
+    articleList.forEach((tagsList) => {
+        tagsList.tagList.forEach((singleTag) => {
+            tagList.push(singleTag)
+        })
+    })
 
     const filteredTags = tagList.filter(element => {
         return element !== undefined
@@ -16,5 +18,4 @@ const getTags = async (req, res) => {
     res.json({ tags });
 }
 
-
-module.exports = { getTags, }
+module.exports = { getTags }
