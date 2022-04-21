@@ -22,7 +22,8 @@ const articleSchema = new mongoose.Schema(
 const Article = mongoose.model("Article", articleSchema);
 
 const getAllArticles = async () => {
-  const articles = await Article.find().sort({ createdAt:-1 });
+  const articles = await Article.find().populate("author", "username image -_id").sort({ createdAt:-1 });
+  console.log(articles)
   return articles;
 };
 
