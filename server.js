@@ -8,7 +8,7 @@ const { User } = require("./models/User");
 const { getTags } = require("./controllers/tags");
 
 const {
-  getArticleList,
+  getAllArticles,
   createArticle,
   getArticleBySlug,
   updateArticleBySlug,
@@ -144,8 +144,6 @@ app.post("/api/articles", requireLogin, createArticle);
 app.get("/api/articles/:slug", getArticleBySlug);
 
 app.put("/api/articles/:slug", requireLogin, updateArticleBySlug);
-
-app.get("/api/articles", getArticleList);
 
 app.get("/api/tags", getTags);
 

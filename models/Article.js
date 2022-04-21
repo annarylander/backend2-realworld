@@ -53,7 +53,7 @@ const getArticlesByTag = async (tag) => {
 
 const getArticleBySlugModel = async (slug) => {
     const article = await Article.findOne({slug: slug}).populate("author", "username image -_id")
-    return article  
+    return article
 }
 
 const updateArticleBySlugModel = async (slug, description, body, title) => {
