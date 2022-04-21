@@ -6,7 +6,8 @@ const bcrypt = require("bcrypt");
 
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
-const { getArticleList } = require("./controllers/articles");
+const { getTags } = require("./controllers/tags");
+const { getArticleList, createArticle, getArticleBySlug } = require("./controllers/articles")
 const mongoose = require("mongoose");
 
 const app = express();
@@ -94,7 +95,7 @@ app.post("/api/users/login", async (req, res) => {
   }
 });
 
-app.get("/user", requireLogin, async (req, res) => {
+app.get("/api/user", requireLogin, async (req, res) => {
   let user = await User.findOne({ _id: req.user.userId });
   user = user.toObject();
   user.token = req.user.token;
@@ -130,36 +131,11 @@ app.put("/api/user", requireLogin, async (req, res) => {
   }
 });
 
-app.post("/api/articles", requireLogin, async (req, res) => {
-  const { title, description, body, tagList } = req.body.article;
-  const user = req.user;
-  try {
-    const article = await Article.create({
-      title: title,
-      description: description,
-      body: body,
-      tagList: tagList,
-      author: user.userId,
-    });
-    res.status(201).json({ article });
-  } catch (err) {
-    console.log(err);
-    res.status(400);
-  }
-});
+app.post("/api/articles", requireLogin, createArticle);
 
-app.get("/api/articles", async (req, res) => {
-  const articles = await Article.find();
-  const articlesCount = articles.length;
-  res.json({ articles, articlesCount });
-});
 
-app.get("/api/articles/:slug", async (req, res) => {
-  const slug = req.params.slug
-  const article = await Article.findOne({slug})
-  res.json({article})
-  console.log(article)
-})
+app.get("/api/articles/:slug", getArticleBySlug)
+
 
 app.put("/api/articles/:slug", requireLogin, async (req, res) => {
   const slug = req.params.slug
@@ -175,7 +151,9 @@ app.put("/api/articles/:slug", requireLogin, async (req, res) => {
     console.log(err)
   }
 })
+app.get("/api/articles", getArticleList)
 
+app.get("/api/tags", getTags)
 
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {
