@@ -42,21 +42,17 @@ const getAllArticlesModel = async () => {
 
 const getArticlesByAuthor = async (author) => {
   const user = await User.findOne({ username: author })
-  console.log(user)
   const articles = await Article.find({ author: user._id }).populate("author", "username image -_id").sort({ createdAt:-1 });
-  console.log(articles)
   return articles
 }
 
 const getArticlesByTag = async (tag) => {
   const articles = await Article.find({ tagList: tag }).populate("author", "username image -_id").sort({ createdAt:-1 });
-  console.log(articles)
   return articles
 }
 
 const getArticleBySlugModel = async (slug) => {
     const article = await Article.findOne({slug: slug}).populate("author", "username image -_id")
-    console.log(article)
     return article  
 }
 

@@ -50,7 +50,6 @@ const getAllArticles = async (req, res) => {
 const getArticleBySlug = async (req, res) => {
   const slug = req.params.slug
   const article = await getArticleBySlugModel(slug)
-  console.log(article)
   res.json({article})
 }
 
