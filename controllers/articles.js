@@ -1,4 +1,4 @@
-const { getAllArticles, createArticleModel, getArticlesByAuthor, getArticlesByTag } = require("../models/Article")
+const { getAllArticles, createArticleModel, getArticlesByAuthor, getArticlesByTag, getArticleBySlugModel, updateArticleBySlugModel } = require("../models/Article")
 
 const createArticle = async (req,res) => {
   const {title, description, body, tagList} = req.body.article
@@ -17,6 +17,25 @@ const createArticle = async (req,res) => {
     res.status(400);
   }
 };
+
+const getArticleBySlug = async (req, res) => {
+  const slug = req.params.slug
+  const article = await getArticleBySlugModel(slug)
+  console.log(article)
+  res.json({article})
+}
+
+const updateArticleBySlug = async (req, res) => {
+  const request = req.body.article
+  const description = request.description
+  const body = request.body
+  const title = request.title
+
+  const slug = req.params.slug
+  
+  const article = await updateArticleBySlugModel(slug, description, body, title)
+  res.json({article})
+}
 
 const getArticleList = async (req, res) => {
   const author = req.query.author
@@ -47,4 +66,4 @@ const getArticleList = async (req, res) => {
   }
 }
 
-module.exports = { getArticleList, createArticle }
+module.exports = { getArticleList, createArticle, getArticleBySlug, updateArticleBySlug }
