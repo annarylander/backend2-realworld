@@ -6,7 +6,14 @@ const bcrypt = require("bcrypt");
 
 const { User } = require("./models/User");
 const { getTags } = require("./controllers/tags");
-const { getAllArticles, createArticle, getArticleBySlug, updateArticleBySlug } = require("./controllers/articles")
+
+const {
+  getArticleList,
+  createArticle,
+  getArticleBySlug,
+  updateArticleBySlug,
+} = require("./controllers/articles");
+
 const mongoose = require("mongoose");
 
 const app = express();
@@ -130,15 +137,17 @@ app.put("/api/user", requireLogin, async (req, res) => {
   }
 });
 
-app.post("/api/articles", requireLogin, createArticle);
-
 app.get("/api/articles", getAllArticles)
 
-app.get("/api/articles/:slug", getArticleBySlug)
+app.post("/api/articles", requireLogin, createArticle);
 
-app.put("/api/articles/:slug", requireLogin, updateArticleBySlug)
+app.get("/api/articles/:slug", getArticleBySlug);
 
-app.get("/api/tags", getTags)
+app.put("/api/articles/:slug", requireLogin, updateArticleBySlug);
+
+app.get("/api/articles", getArticleList);
+
+app.get("/api/tags", getTags);
 
 app.get("/api/profiles/:username", async (req, res) => {
   const username = req.params.username;
