@@ -39,14 +39,13 @@ const updateArticleBySlugModel = async (slug, description, body, title) => {
 
 const getAllArticles = async () => {
   const articles = await Article.find().populate("author", "username image -_id").sort({ createdAt:-1 });
-  console.log(articles)
   return articles;
 };
 
 const getArticlesByAuthor = async (author) => {
   const user = await User.findOne({ username: author })
   console.log(user)
-  const articles = await Article.find({ author: user._id })
+  const articles = await Article.find({ author: user._id }).populate("author", "username image -_id").sort({ createdAt:-1 });
   console.log(articles)
   return articles
 }
