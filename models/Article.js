@@ -11,9 +11,7 @@ const articleSchema = new mongoose.Schema(
     tagList: { type: Array },
     slug: { type: String, slug: "title", unique: true},
     favorited: { type: Boolean, default: false },
-    favoritesCount: { type: Number, default: 0 },
-    createdAt: { type: Date, default: Date.now, required: true },
-    updatedAt: { type: Date, default: Date.now },
+    favoritesCount: { type: Number, default: 0 }
   },
   { timestamps: true }
 );
@@ -22,13 +20,8 @@ articleSchema.pre("save", function(next) {
   this.slug = this.title.split(" ").join("-");
   next();
 });
+
+
 const Article = mongoose.model("Article", articleSchema);
-
-// const getAllArticle = async () => {
-//   const articles = await Article.find();
-//   return articles;
-// };
-
-// module.exports = { getAllArticle }
 
 exports.Article = Article;

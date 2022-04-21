@@ -22,10 +22,10 @@ const requireLogin = (req, res, next) => {
   try {
     const token = authHeader.split(" ")[1];
     req.user = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("inloggad");
-    console.log(token);
+    // console.log("inloggad");
+    // console.log(token);
     req.user.token = token;
-    console.log(req.user);
+    // console.log(req.user);
     next();
   } catch (err) {
     console.log(err);
@@ -158,6 +158,22 @@ app.get("/api/articles/:slug", async (req, res) => {
   const slug = req.params.slug
   const article = await Article.findOne({slug})
   res.json({article})
+  console.log(article)
+})
+
+app.put("/api/articles/:slug", requireLogin, async (req, res) => {
+  const slug = req.params.slug
+  console.log(slug)
+  console.log("Vad vi skickar med: ", req.body.article)
+  try{
+    const article = await Article.findOneAndUpdate({slug},
+      {$set: {description: req.body.article.description, body: req.body.article.body, title: req.body.article.title, slug: req.body.article.title}})
+      res.json({article})
+      // await article.save()
+      console.log(article)
+  } catch(err){
+    console.log(err)
+  }
 })
 
 
