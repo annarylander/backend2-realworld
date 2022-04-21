@@ -1,4 +1,4 @@
-const { getAllArticles, createArticleModel, getArticlesByAuthor, getArticlesByTag } = require("../models/Article")
+const { getAllArticles, createArticleModel, getArticlesByAuthor, getArticlesByTag, setFavoriteArticleModel } = require("../models/Article")
 
 const createArticle = async (req,res) => {
   const {title, description, body, tagList} = req.body.article
@@ -47,4 +47,11 @@ const getArticleList = async (req, res) => {
   }
 }
 
-module.exports = { getArticleList, createArticle }
+const setFavoriteArticle = async (req, res) => {
+  const {slug} = req.params
+  console.log("test")
+  const article = await setFavoriteArticleModel(slug)
+  res.json({article})
+}
+
+module.exports = { getArticleList, createArticle, setFavoriteArticle }

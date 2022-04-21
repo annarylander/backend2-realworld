@@ -57,11 +57,22 @@ const createArticleModel = async ({
   return article;
 };
 
+const setFavoriteArticleModel = async (slug) => {
+  console.log("nånting")
+  const article = await Article.updateOne(
+    { slug },
+    { $set: { favorited: true } }
+  );
+  return article
+
+}
+
 module.exports = {
   getAllArticles,
   getArticlesByAuthor,
   getArticlesByTag,
   createArticleModel,
+  setFavoriteArticleModel
 };
 
 exports.Article = Article;
