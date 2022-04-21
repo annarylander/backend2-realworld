@@ -8,10 +8,11 @@ const { User } = require("./models/User");
 const { Article } = require("./models/Article");
 const { getTags } = require("./controllers/tags");
 const {
-  getArticleList,
+  getAllArticles,
   createArticle,
   getArticleBySlug,
   updateArticleBySlug,
+  setFavoriteArticle,
 } = require("./controllers/articles");
 const mongoose = require("mongoose");
 
@@ -158,19 +159,7 @@ app.get("/api/articles", getArticleList);
 
 app.get("/api/tags", getTags);
 
-app.post("/api/articles/:slug/favorite", async (req, res) => {
-  const { slug } = req.params;
-  try {
-    const article = await Article.updateOne(
-      { slug },
-      { $set: { favorited: true } }
-    );
-    res.status(201).json({ article });
-  } catch (err) {
-    console.log(err);
-    res.status(400);
-  }
-});
+app.post("/api/articles/:slug/favorite", setFavoriteArticle);
 
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {

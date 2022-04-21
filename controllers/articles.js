@@ -1,8 +1,16 @@
-const { getAllArticles, createArticleModel, getArticlesByAuthor, getArticlesByTag, getArticleBySlugModel, updateArticleBySlugModel } = require("../models/Article")
+const {
+  getAllArticles,
+  createArticleModel,
+  getArticlesByAuthor,
+  getArticlesByTag,
+  getArticleBySlugModel,
+  updateArticleBySlugModel,
+  setFavoriteArticleModel,
+} = require("../models/Article");
 
-const createArticle = async (req,res) => {
-  const {title, description, body, tagList} = req.body.article
-  const user = req.user
+const createArticle = async (req, res) => {
+  const { title, description, body, tagList } = req.body.article;
+  const user = req.user;
   try {
     const article = await createArticleModel({
       title: title,
@@ -19,51 +27,68 @@ const createArticle = async (req,res) => {
 };
 
 const getArticleBySlug = async (req, res) => {
-  const slug = req.params.slug
-  const article = await getArticleBySlugModel(slug)
-  console.log(article)
-  res.json({article})
-}
+  const slug = req.params.slug;
+  const article = await getArticleBySlugModel(slug);
+  console.log(article);
+  res.json({ article });
+};
 
 const updateArticleBySlug = async (req, res) => {
-  const request = req.body.article
-  const description = request.description
-  const body = request.body
-  const title = request.title
+  const request = req.body.article;
+  const description = request.description;
+  const body = request.body;
+  const title = request.title;
 
-  const slug = req.params.slug
-  
-  const article = await updateArticleBySlugModel(slug, description, body, title)
-  res.json({article})
-}
+  const slug = req.params.slug;
+
+  const article = await updateArticleBySlugModel(
+    slug,
+    description,
+    body,
+    title
+  );
+  res.json({ article });
+};
 
 const getArticleList = async (req, res) => {
-  const author = req.query.author
-  const tag = req.query.tag
+  const author = req.query.author;
+  const tag = req.query.tag;
 
-  if (author){
-      try {
-        const articles = await getArticlesByAuthor(author)
-        const articlesCount = articles.length
-          res.json({ articles, articlesCount })
-            } catch (err) {
-              console.log(err)
-          res.json({ err })
-          }
-      } else if (tag) {
-        const articles = await getArticlesByTag(tag)
-        const articlesCount = articles.length
-        res.json({ articles, articlesCount })
-      } else {
-        try {
-          const articles = await getAllArticles()
-          const articlesCount = articles.length
-          res.json({ articles, articlesCount })
-         
-      } catch (err) {
-          res.json({ err })
-      }
+  if (author) {
+    try {
+      const articles = await getArticlesByAuthor(author);
+      const articlesCount = articles.length;
+      res.json({ articles, articlesCount });
+    } catch (err) {
+      console.log(err);
+      res.json({ err });
+    }
+  } else if (tag) {
+    const articles = await getArticlesByTag(tag);
+    const articlesCount = articles.length;
+    res.json({ articles, articlesCount });
+  } else {
+    try {
+      const articles = await getAllArticles();
+      const articlesCount = articles.length;
+      res.json({ articles, articlesCount });
+    } catch (err) {
+      res.json({ err });
+    }
   }
-}
+};
 
-module.exports = { getArticleList, createArticle, getArticleBySlug, updateArticleBySlug }
+const setFavoriteArticle = async (req, res) => {
+  const { slug } = req.params;
+  console.log("test");
+  const article = await setFavoriteArticleModel(slug);
+  res.json({ article });
+};
+
+module.exports = {
+  getArticleList,
+  createArticle,
+  getArticleBySlug,
+  updateArticleBySlug,
+  setFavoriteArticle,
+};
