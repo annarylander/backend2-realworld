@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
 const { getTags } = require("./controllers/tags");
-const { getArticleList, createArticle, getArticleBySlug } = require("./controllers/articles")
+const { getArticleList, createArticle, getArticleBySlug, updateArticleBySlug } = require("./controllers/articles")
 const mongoose = require("mongoose");
 
 const app = express();
@@ -137,20 +137,8 @@ app.post("/api/articles", requireLogin, createArticle);
 app.get("/api/articles/:slug", getArticleBySlug)
 
 
-app.put("/api/articles/:slug", requireLogin, async (req, res) => {
-  const slug = req.params.slug
-  console.log(slug)
-  console.log("Vad vi skickar med: ", req.body.article)
-  try{
-    const article = await Article.findOneAndUpdate({slug},
-      {$set: {description: req.body.article.description, body: req.body.article.body, title: req.body.article.title, slug: req.body.article.title}})
-      res.json({article})
-      // await article.save()
-      console.log(article)
-  } catch(err){
-    console.log(err)
-  }
-})
+app.put("/api/articles/:slug", requireLogin, updateArticleBySlug)
+
 app.get("/api/articles", getArticleList)
 
 app.get("/api/tags", getTags)

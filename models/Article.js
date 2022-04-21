@@ -26,9 +26,16 @@ articleSchema.pre("save", function(next) {
 const Article = mongoose.model("Article", articleSchema);
 
 const getArticleBySlugModel = async (slug) => {
-    const article = await Article.findOne({slug})
+    const article = await Article.findOne({slug: slug})
+    console.log(article)
     return article  
 }
+
+const updateArticleBySlugModel = async (slug, description, body, title) => {
+  const article = await Article.findOneAndUpdate({slug},
+    {$set: {description, body, title, slug: title}})
+    return article
+  }
 
 const getAllArticles = async () => {
   const articles = await Article.find().sort({ createdAt:-1 });
@@ -60,6 +67,6 @@ const createArticleModel = async ({author, title, description, body, tagList})=>
   return article
 }
 
-module.exports = { getAllArticles, getArticlesByAuthor, getArticlesByTag, createArticleModel, getArticleBySlugModel }
+module.exports = { getAllArticles, getArticlesByAuthor, getArticlesByTag, createArticleModel, getArticleBySlugModel, updateArticleBySlugModel }
 
 exports.Article = Article;
