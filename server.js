@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
 const { getTags } = require("./controllers/tags");
-const { getArticleList, createArticle } = require("./controllers/articles")
+const { getArticleList, createArticle, getArticleBySlug, updateArticleBySlug } = require("./controllers/articles")
 const mongoose = require("mongoose");
 
 const app = express();
@@ -23,10 +23,10 @@ const requireLogin = (req, res, next) => {
   try {
     const token = authHeader.split(" ")[1];
     req.user = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("inloggad");
-    console.log(token);
+    // console.log("inloggad");
+    // console.log(token);
     req.user.token = token;
-    console.log(req.user);
+    // console.log(req.user);
     next();
   } catch (err) {
     console.log(err);
@@ -132,6 +132,12 @@ app.put("/api/user", requireLogin, async (req, res) => {
 });
 
 app.post("/api/articles", requireLogin, createArticle);
+
+
+app.get("/api/articles/:slug", getArticleBySlug)
+
+
+app.put("/api/articles/:slug", requireLogin, updateArticleBySlug)
 
 app.get("/api/articles", getArticleList)
 
