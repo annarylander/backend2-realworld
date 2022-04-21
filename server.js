@@ -95,7 +95,7 @@ app.post("/api/users/login", async (req, res) => {
   }
 });
 
-app.get("/user", requireLogin, async (req, res) => {
+app.get("/api/user", requireLogin, async (req, res) => {
   let user = await User.findOne({ _id: req.user.userId });
   user = user.toObject();
   user.token = req.user.token;
