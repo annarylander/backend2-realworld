@@ -166,6 +166,20 @@ app.get("/api/articles", async (req, res) => {
   res.json({ articles, articlesCount });
 });
 
+app.post("/api/articles/:slug/favorite", async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const article = await Article.updateOne(
+      { slug },
+      { $set: { favorited: true } }
+    );
+    res.status(201).json({ article });
+  } catch (err) {
+    console.log(err);
+    res.status(400);
+  }
+});
+
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {
   console.log(`Started Express server on port ${PORT}`);
