@@ -1,12 +1,12 @@
 const { getAllArticlesModel } = require("../models/Article")
 
 const getTags = async (req, res) => {
-    const tagsList = await getAllArticlesModel()
+    const articleList = await getAllArticlesModel()
     let tagList = []
 
-    tagsList.forEach((tags) => {
-        tags.tagList.forEach((data) => {
-            tagList.push(data)
+    articleList.forEach((tagsList) => {
+        tagsList.tagList.forEach((singleTag) => {
+            tagList.push(singleTag)
         })
     })
 
