@@ -1,4 +1,4 @@
-const { getAllArticles, createArticleModel, getArticlesByAuthor, getArticlesByTag, getArticleBySlugModel, updateArticleBySlugModel } = require("../models/Article")
+const { getAllArticlesModel, createArticleModel, getArticlesByAuthor, getArticlesByTag, getArticleBySlugModel, updateArticleBySlugModel } = require("../models/Article")
 
 const createArticle = async (req,res) => {
   const {title, description, body, tagList} = req.body.article
@@ -17,6 +17,35 @@ const createArticle = async (req,res) => {
     res.status(400);
   }
 };
+
+const getAllArticles = async (req, res) => {
+  const author = req.query.author
+  const tag = req.query.tag
+
+  if (author){
+      try {
+        const articles = await getArticlesByAuthor(author)
+        const articlesCount = articles.length
+          res.json({ articles, articlesCount })
+            } catch (err) {
+              console.log(err)
+          res.json({ err })
+          }
+      } else if (tag) {
+        const articles = await getArticlesByTag(tag)
+        const articlesCount = articles.length
+        res.json({ articles, articlesCount })
+      } else {
+        try {
+          const articles = await getAllArticlesModel()
+          const articlesCount = articles.length
+          res.json({ articles, articlesCount })
+         
+      } catch (err) {
+          res.json({ err })
+      }
+  }
+}
 
 const getArticleBySlug = async (req, res) => {
   const slug = req.params.slug
@@ -37,33 +66,4 @@ const updateArticleBySlug = async (req, res) => {
   res.json({article})
 }
 
-const getArticleList = async (req, res) => {
-  const author = req.query.author
-  const tag = req.query.tag
-
-  if (author){
-      try {
-        const articles = await getArticlesByAuthor(author)
-        const articlesCount = articles.length
-          res.json({ articles, articlesCount })
-            } catch (err) {
-              console.log(err)
-          res.json({ err })
-          }
-      } else if (tag) {
-        const articles = await getArticlesByTag(tag)
-        const articlesCount = articles.length
-        res.json({ articles, articlesCount })
-      } else {
-        try {
-          const articles = await getAllArticles()
-          const articlesCount = articles.length
-          res.json({ articles, articlesCount })
-         
-      } catch (err) {
-          res.json({ err })
-      }
-  }
-}
-
-module.exports = { getArticleList, createArticle, getArticleBySlug, updateArticleBySlug }
+module.exports = { getAllArticles, createArticle, getArticleBySlug, updateArticleBySlug }

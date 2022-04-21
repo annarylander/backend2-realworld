@@ -5,9 +5,8 @@ const dotenv = require("dotenv").config();
 const bcrypt = require("bcrypt");
 
 const { User } = require("./models/User");
-const { Article } = require("./models/Article");
 const { getTags } = require("./controllers/tags");
-const { getArticleList, createArticle, getArticleBySlug, updateArticleBySlug } = require("./controllers/articles")
+const { getAllArticles, createArticle, getArticleBySlug, updateArticleBySlug } = require("./controllers/articles")
 const mongoose = require("mongoose");
 
 const app = express();
@@ -133,11 +132,11 @@ app.put("/api/user", requireLogin, async (req, res) => {
 
 app.post("/api/articles", requireLogin, createArticle);
 
+app.get("/api/articles", getAllArticles)
+
 app.get("/api/articles/:slug", getArticleBySlug)
 
 app.put("/api/articles/:slug", requireLogin, updateArticleBySlug)
-
-app.get("/api/articles", getArticleList)
 
 app.get("/api/tags", getTags)
 

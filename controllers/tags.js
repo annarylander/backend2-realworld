@@ -1,7 +1,7 @@
-const { getAllArticles } = require("../models/Article")
+const { getAllArticlesModel } = require("../models/Article")
 
 const getTags = async (req, res) => {
-    const tagsList = await getAllArticles()
+    const tagsList = await getAllArticlesModel()
     let tagList = []
 
     for (let i = 0; i < tagsList.length; i++) {
