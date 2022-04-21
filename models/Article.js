@@ -62,6 +62,13 @@ const updateArticleBySlugModel = async (slug, description, body, title) => {
     return article
 }
 
-module.exports = { getAllArticlesModel, getArticlesByAuthor, getArticlesByTag, createArticleModel, getArticleBySlugModel, updateArticleBySlugModel }
+module.exports = { 
+  getAllArticlesModel, 
+  getArticlesByAuthor, 
+  getArticlesByTag, 
+  createArticleModel, 
+  getArticleBySlugModel, 
+  updateArticleBySlugModel
+}
 
 exports.Article = Article;

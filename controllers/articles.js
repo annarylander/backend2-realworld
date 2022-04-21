@@ -65,4 +65,9 @@ const updateArticleBySlug = async (req, res) => {
   res.json({article})
 }
 
-module.exports = { getAllArticles, createArticle, getArticleBySlug, updateArticleBySlug }
+module.exports = { 
+  getAllArticles, 
+  createArticle, 
+  getArticleBySlug, 
+  updateArticleBySlug
+}

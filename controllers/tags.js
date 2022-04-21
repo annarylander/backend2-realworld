@@ -4,9 +4,11 @@ const getTags = async (req, res) => {
     const tagsList = await getAllArticlesModel()
     let tagList = []
 
-    for (let i = 0; i < tagsList.length; i++) {
-    tagList.push(tagsList[i].tagList[0])       
-    }
+    tagsList.forEach((tags) => {
+        tags.tagList.forEach((data) => {
+            tagList.push(data)
+        })
+    })
 
     const filteredTags = tagList.filter(element => {
         return element !== undefined
