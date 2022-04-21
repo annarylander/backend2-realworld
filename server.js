@@ -7,7 +7,12 @@ const bcrypt = require("bcrypt");
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
 const { getTags } = require("./controllers/tags");
-const { getArticleList, createArticle, getArticleBySlug, updateArticleBySlug } = require("./controllers/articles")
+const {
+  getArticleList,
+  createArticle,
+  getArticleBySlug,
+  updateArticleBySlug,
+} = require("./controllers/articles");
 const mongoose = require("mongoose");
 
 const app = express();
@@ -131,17 +136,27 @@ app.put("/api/user", requireLogin, async (req, res) => {
   }
 });
 
+app.get("/api/profiles/:username", async (req, res) => {
+  const username = req.params.username;
+  const user = await User.findOne({ username: username });
+  res.json({
+    profile: {
+      username: user.username,
+      bio: user.bio,
+      image: user.image,
+    },
+  });
+});
+
 app.post("/api/articles", requireLogin, createArticle);
 
+app.get("/api/articles/:slug", getArticleBySlug);
 
-app.get("/api/articles/:slug", getArticleBySlug)
+app.put("/api/articles/:slug", requireLogin, updateArticleBySlug);
 
+app.get("/api/articles", getArticleList);
 
-app.put("/api/articles/:slug", requireLogin, updateArticleBySlug)
-
-app.get("/api/articles", getArticleList)
-
-app.get("/api/tags", getTags)
+app.get("/api/tags", getTags);
 
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {
