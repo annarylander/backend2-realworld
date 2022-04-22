@@ -10,9 +10,10 @@ const articleSchema = new mongoose.Schema(
     description: { type: String },
     body: { type: String },
     tagList: { type: Array },
-    slug: { type: String, unique: true, required: true },
+    slug: { type: String, slug: "title", unique: true },
     favorited: { type: Boolean, default: false },
     favoritesCount: { type: Number, default: 0 },
+    favoritedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
@@ -23,39 +24,6 @@ articleSchema.pre("save", function (next) {
 });
 
 const Article = mongoose.model("Article", articleSchema);
-
-const getArticleBySlugModel = async (slug) => {
-  const article = await Article.findOne({ slug: slug });
-  console.log(article);
-  return article;
-};
-
-const updateArticleBySlugModel = async (slug, description, body, title) => {
-  const article = await Article.findOneAndUpdate(
-    { slug },
-    { $set: { description, body, title, slug: title } }
-  );
-  return article;
-};
-
-const getAllArticles = async () => {
-  const articles = await Article.find().sort({ createdAt: -1 });
-  return articles;
-};
-
-const getArticlesByAuthor = async (author) => {
-  const user = await User.findOne({ username: author });
-  console.log(user);
-  const articles = await Article.find({ author: user._id });
-  console.log(articles);
-  return articles;
-};
-
-const getArticlesByTag = async (tag) => {
-  const articles = await Article.find({ tagList: tag });
-  console.log(articles);
-  return articles;
-};
 
 const createArticleModel = async ({
   author,
@@ -74,17 +42,56 @@ const createArticleModel = async ({
   return article;
 };
 
-const setFavoriteArticleModel = async (slug) => {
+const getAllArticlesModel = async () => {
+  const articles = await Article.find()
+    .populate("author", "username image -_id")
+    .sort({ createdAt: -1 });
+  return articles;
+};
+
+const getArticlesByAuthor = async (author) => {
+  const user = await User.findOne({ username: author });
+  const articles = await Article.find({ author: user._id })
+    .populate("author", "username image -_id")
+    .sort({ createdAt: -1 });
+  return articles;
+};
+
+const getArticlesByTag = async (tag) => {
+  const articles = await Article.find({ tagList: tag })
+    .populate("author", "username image -_id")
+    .sort({ createdAt: -1 });
+  return articles;
+};
+
+const getArticleBySlugModel = async (slug) => {
+  const article = await Article.findOne({ slug: slug }).populate(
+    "author",
+    "username image -_id"
+  );
+  return article;
+};
+
+const updateArticleBySlugModel = async (slug, description, body, title) => {
+  const article = await Article.findOneAndUpdate(
+    { slug },
+    { $set: { description, body, title, slug: title } }
+  );
+  return article;
+};
+
+const setFavoriteArticleModel = async (user, slug) => {
   console.log("nånting");
+  console.log(user);
   const article = await Article.updateOne(
     { slug },
-    { $set: { favorited: true } }
+    { $inc: { favoritesCount: 1 }, $push: { favoritedBy: user } }
   );
   return article;
 };
 
 module.exports = {
-  getAllArticles,
+  getAllArticlesModel,
   getArticlesByAuthor,
   getArticlesByTag,
   createArticleModel,

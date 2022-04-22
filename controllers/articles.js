@@ -1,5 +1,5 @@
 const {
-  getAllArticles,
+  getAllArticlesModel,
   createArticleModel,
   getArticlesByAuthor,
   getArticlesByTag,
@@ -23,6 +23,34 @@ const createArticle = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400);
+  }
+};
+
+const getAllArticles = async (req, res) => {
+  const author = req.query.author;
+  const tag = req.query.tag;
+
+  if (author) {
+    try {
+      const articles = await getArticlesByAuthor(author);
+      const articlesCount = articles.length;
+      res.json({ articles, articlesCount });
+    } catch (err) {
+      console.log(err);
+      res.json({ err });
+    }
+  } else if (tag) {
+    const articles = await getArticlesByTag(tag);
+    const articlesCount = articles.length;
+    res.json({ articles, articlesCount });
+  } else {
+    try {
+      const articles = await getAllArticlesModel();
+      const articlesCount = articles.length;
+      res.json({ articles, articlesCount });
+    } catch (err) {
+      res.json({ err });
+    }
   }
 };
 
@@ -50,43 +78,16 @@ const updateArticleBySlug = async (req, res) => {
   res.json({ article });
 };
 
-const getArticleList = async (req, res) => {
-  const author = req.query.author;
-  const tag = req.query.tag;
-
-  if (author) {
-    try {
-      const articles = await getArticlesByAuthor(author);
-      const articlesCount = articles.length;
-      res.json({ articles, articlesCount });
-    } catch (err) {
-      console.log(err);
-      res.json({ err });
-    }
-  } else if (tag) {
-    const articles = await getArticlesByTag(tag);
-    const articlesCount = articles.length;
-    res.json({ articles, articlesCount });
-  } else {
-    try {
-      const articles = await getAllArticles();
-      const articlesCount = articles.length;
-      res.json({ articles, articlesCount });
-    } catch (err) {
-      res.json({ err });
-    }
-  }
-};
-
 const setFavoriteArticle = async (req, res) => {
   const { slug } = req.params;
-  console.log("test");
-  const article = await setFavoriteArticleModel(slug);
+  const user = req.user.userId;
+  console.log(user);
+  const article = await setFavoriteArticleModel(user, slug);
   res.json({ article });
 };
 
 module.exports = {
-  getArticleList,
+  getAllArticles,
   createArticle,
   getArticleBySlug,
   updateArticleBySlug,
