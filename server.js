@@ -13,6 +13,7 @@ const {
   getArticleBySlug,
   updateArticleBySlug,
   setFavoriteArticle,
+  removeFavoriteArticle,
 } = require("./controllers/articles");
 
 const mongoose = require("mongoose");
@@ -158,6 +159,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/tags", getTags);
 
 app.post("/api/articles/:slug/favorite", requireLogin, setFavoriteArticle);
+
+app.delete("/api/articles/:slug/favorite", requireLogin, removeFavoriteArticle);
 
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {

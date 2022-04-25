@@ -65,12 +65,12 @@ const getArticlesByTag = async (tag) => {
 };
 
 const getArticlesByFavorited = async (favorited) => {
-  const user = await User.findOne({ username: favorited })
+  const user = await User.findOne({ username: favorited });
   const articles = await Article.find({ favoritedBy: user._id })
     .populate("author", "username image -_id")
     .sort({ createdAt: -1 });
-  return articles
-}
+  return articles;
+};
 
 const getArticleBySlugModel = async (slug) => {
   const article = await Article.findOne({ slug: slug }).populate(
@@ -89,11 +89,17 @@ const updateArticleBySlugModel = async (slug, description, body, title) => {
 };
 
 const setFavoriteArticleModel = async (user, slug) => {
-  console.log("nånting");
-  console.log(user);
   const article = await Article.updateOne(
     { slug },
     { $inc: { favoritesCount: 1 }, $push: { favoritedBy: user } }
+  );
+  return article;
+};
+
+const removeFavoriteArticleModel = async (user, slug) => {
+  const article = await Article.updateOne(
+    { slug },
+    { $inc: { favoritesCount: -1 }, $pull: { favoritedBy: user } }
   );
   return article;
 };
@@ -106,7 +112,8 @@ module.exports = {
   getArticleBySlugModel,
   updateArticleBySlugModel,
   setFavoriteArticleModel,
-  getArticlesByFavorited
+  getArticlesByFavorited,
+  removeFavoriteArticleModel,
 };
 
 exports.Article = Article;

@@ -6,10 +6,8 @@ const {
   getArticleBySlugModel,
   updateArticleBySlugModel,
   setFavoriteArticleModel,
-  getArticlesByFavorited
+  removeFavoriteArticleModel,
 } = require("../models/Article");
-
-const { User } = require("../models/User")
 
 const createArticle = async (req, res) => {
   const { title, description, body, tagList } = req.body.article;
@@ -32,7 +30,6 @@ const createArticle = async (req, res) => {
 const getAllArticles = async (req, res) => {
   const author = req.query.author;
   const tag = req.query.tag;
-  const favorited = req.query.favorited;
 
   if (author) {
     try {
@@ -45,10 +42,6 @@ const getAllArticles = async (req, res) => {
     }
   } else if (tag) {
     const articles = await getArticlesByTag(tag);
-    const articlesCount = articles.length;
-    res.json({ articles, articlesCount });
-  } else if (favorited) {
-    const articles = await getArticlesByFavorited(favorited);
     const articlesCount = articles.length;
     res.json({ articles, articlesCount });
   } else {
@@ -89,8 +82,14 @@ const updateArticleBySlug = async (req, res) => {
 const setFavoriteArticle = async (req, res) => {
   const { slug } = req.params;
   const user = req.user.userId;
-  console.log(user);
   const article = await setFavoriteArticleModel(user, slug);
+  res.json({ article });
+};
+
+const removeFavoriteArticle = async (req, res) => {
+  const { slug } = req.params;
+  const user = req.user.userId;
+  const article = await removeFavoriteArticleModel(user, slug);
   res.json({ article });
 };
 
@@ -100,4 +99,5 @@ module.exports = {
   getArticleBySlug,
   updateArticleBySlug,
   setFavoriteArticle,
+  removeFavoriteArticle,
 };
