@@ -64,6 +64,14 @@ const getArticlesByTag = async (tag) => {
   return articles;
 };
 
+const getArticlesByFavorited = async (favorited) => {
+  const user = await User.findOne({ username: favorited })
+  const articles = await Article.find({ favoritedBy: user._id })
+    .populate("author", "username image -_id")
+    .sort({ createdAt: -1 });
+  return articles
+}
+
 const getArticleBySlugModel = async (slug) => {
   const article = await Article.findOne({ slug: slug }).populate(
     "author",
@@ -98,6 +106,7 @@ module.exports = {
   getArticleBySlugModel,
   updateArticleBySlugModel,
   setFavoriteArticleModel,
+  getArticlesByFavorited
 };
 
 exports.Article = Article;
