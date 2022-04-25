@@ -91,7 +91,11 @@ const updateArticleBySlugModel = async (slug, description, body, title) => {
 const setFavoriteArticleModel = async (user, slug) => {
   const article = await Article.findOneAndUpdate(
     { slug },
-    { $inc: { favoritesCount: 1 }, $addToSet: { favoritedBy: user } }
+    {
+      $inc: { favoritesCount: 1 },
+      $addToSet: { favoritedBy: user },
+      favorited: true,
+    }
   );
   return article;
 };
@@ -99,7 +103,11 @@ const setFavoriteArticleModel = async (user, slug) => {
 const removeFavoriteArticleModel = async (user, slug) => {
   const article = await Article.findOneAndUpdate(
     { slug },
-    { $inc: { favoritesCount: -1 }, $pull: { favoritedBy: user } }
+    {
+      $inc: { favoritesCount: -1 },
+      $pull: { favoritedBy: user },
+      favorited: false,
+    }
   );
   return article;
 };
