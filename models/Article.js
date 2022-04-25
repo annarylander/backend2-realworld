@@ -91,7 +91,7 @@ const updateArticleBySlugModel = async (slug, description, body, title) => {
 const setFavoriteArticleModel = async (user, slug) => {
   const article = await Article.updateOne(
     { slug },
-    { $inc: { favoritesCount: 1 }, $push: { favoritedBy: user } }
+    { $inc: { favoritesCount: 1 }, $addToSet: { favoritedBy: user } }
   );
   return article;
 };
