@@ -12,6 +12,8 @@ const {
   createArticle,
   getArticleBySlug,
   updateArticleBySlug,
+  setFavoriteArticle,
+  removeFavoriteArticle,
 } = require("./controllers/articles");
 
 const mongoose = require("mongoose");
@@ -29,10 +31,7 @@ const requireLogin = (req, res, next) => {
   try {
     const token = authHeader.split(" ")[1];
     req.user = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log("inloggad");
-    // console.log(token);
     req.user.token = token;
-    // console.log(req.user);
     next();
   } catch (err) {
     console.log(err);
@@ -137,16 +136,6 @@ app.put("/api/user", requireLogin, async (req, res) => {
   }
 });
 
-app.get("/api/articles", getAllArticles)
-
-app.post("/api/articles", requireLogin, createArticle);
-
-app.get("/api/articles/:slug", getArticleBySlug);
-
-app.put("/api/articles/:slug", requireLogin, updateArticleBySlug);
-
-app.get("/api/tags", getTags);
-
 app.get("/api/profiles/:username", async (req, res) => {
   const username = req.params.username;
   const user = await User.findOne({ username: username });
@@ -158,6 +147,20 @@ app.get("/api/profiles/:username", async (req, res) => {
     },
   });
 });
+
+app.post("/api/articles", requireLogin, createArticle);
+
+app.get("/api/articles/:slug", getArticleBySlug);
+
+app.put("/api/articles/:slug", requireLogin, updateArticleBySlug);
+
+app.get("/api/articles", getAllArticles);
+
+app.get("/api/tags", getTags);
+
+app.post("/api/articles/:slug/favorite", requireLogin, setFavoriteArticle);
+
+app.delete("/api/articles/:slug/favorite", requireLogin, removeFavoriteArticle);
 
 mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {
