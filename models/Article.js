@@ -51,10 +51,15 @@ const getAllArticlesModel = async () => {
 
 const getArticlesByAuthor = async (author) => {
   const user = await User.findOne({ username: author });
-  const articles = await Article.find({ author: user._id })
-    .populate("author", "username image -_id")
-    .sort({ createdAt: -1 });
-  return articles;
+  if (user) {
+    const articles = await Article.find({ author: user._id })
+      .populate("author", "username image -_id")
+      .sort({ createdAt: -1 });
+    return articles;
+  } else {
+    const articles = []
+    return articles
+  }
 };
 
 const getArticlesByTag = async (tag) => {
